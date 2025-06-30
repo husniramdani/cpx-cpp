@@ -19,8 +19,8 @@
 ╚══════════════════════════════════════════════════════════════════════════╝
 */
 
-#include "stdc++.h"
-// #include <bits/stdc++.h>
+// #include "stdc++.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 // Macros for competitive programming
@@ -42,20 +42,29 @@ const int INF = 1e9;
 const ll LINF = 1e18;
 
 void solve() {
-    // Your solution here
-    
+  int a, x, y;
+  cin >> a >> x >> y;
+
+  int bDiff = abs(x-y);
+  int aDiff1 = abs(a-x);
+  int aDiff2 = abs(a-y);
+
+  if(bDiff <= aDiff1 || bDiff <= aDiff2){
+    cout << "YES" << endl;
+  } else {
+    cout << "NO" << endl;
+  }
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+  fast
     
-    int n;
-    // cin >> n;
-    
-    while(n--) {
-        solve();
-    }
-    
-    return 0;
+  int t;
+  cin >> t;
+
+  while(t--) {
+      solve();
+  }
+
+  return 0;
 }

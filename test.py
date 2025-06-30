@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-SPINDYZEL C++ Test Runner with Multiple Test Cases
-Usage: python3 test.py solution.cpp
+SPINDYZEL Simple Test Runner
+Handles input/output format test files
+Usage: python3 test-simple.py solution.cpp test.txt
 """
 
 import subprocess
@@ -39,8 +40,31 @@ def compile_cpp(filename):
     print(f"{GREEN}Compilation successful!{RESET}")
     return executable
 
-def run_test(executable, test_input, expected_output, test_num):
-    """Run a single test case"""
+def parse_simple_test_file(test_file):
+    """Parse test file with input/output format"""
+    with open(test_file, 'r') as f:
+        content = f.read().strip()
+    
+    # Split by input/output sections
+    parts = content.split('input')
+    if len(parts) < 2:
+        return None, None
+    
+    # Get everything after 'input'
+    after_input = parts[1]
+    
+    # Split by 'output'
+    io_parts = after_input.split('output')
+    if len(io_parts) < 2:
+        return None, None
+    
+    input_text = io_parts[0].strip()
+    output_text = io_parts[1].strip()
+    
+    return input_text, output_text
+
+def run_test(executable, test_input, expected_output):
+    """Run the test"""
     result = subprocess.run(
         [f"./{executable}"],
         input=test_input,
@@ -51,54 +75,46 @@ def run_test(executable, test_input, expected_output, test_num):
     actual_output = result.stdout.strip()
     expected_output = expected_output.strip()
     
+    print(f"{BLUE}Input:{RESET}")
+    print(test_input)
+    print(f"{BLUE}Expected Output:{RESET}")
+    print(expected_output)
+    print(f"{BLUE}Actual Output:{RESET}")
+    print(actual_output)
+    
     if actual_output == expected_output:
-        print(f"{GREEN}Test {test_num}: PASSED{RESET}")
+        print(f"{GREEN}✓ TEST PASSED{RESET}")
         return True
     else:
-        print(f"{RED}Test {test_num}: FAILED{RESET}")
-        print(f"Input:\n{test_input}")
-        print(f"Expected:\n{expected_output}")
-        print(f"Got:\n{actual_output}")
+        print(f"{RED}✗ TEST FAILED{RESET}")
         return False
 
-def read_test_cases(test_file):
-    """Read test cases from file"""
-    tests = []
-    with open(test_file, 'r') as f:
-        lines = f.readlines()
-    
-    i = 0
-    while i < len(lines):
-        if lines[i].strip().startswith('###'):
-            # Read input until next ### or ---
-            i += 1
-            test_input = []
-            while i < len(lines) and not lines[i].strip().startswith('---'):
-                test_input.append(lines[i].rstrip())
-                i += 1
-            
-            # Read expected output
-            i += 1
-            expected = []
-            while i < len(lines) and not lines[i].strip().startswith('###'):
-                if lines[i].strip():
-                    expected.append(lines[i].rstrip())
-                i += 1
-            
-            tests.append(('\n'.join(test_input), '\n'.join(expected)))
-        else:
-            i += 1
-    
-    return tests
-
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python3 test.py solution.cpp [test_file.txt]")
+    if len(sys.argv) < 3:
+        print("Usage: python3 test-simple.py solution.cpp test.txt")
         sys.exit(1)
     
     cpp_file = Path(sys.argv[1])
+    test_file = Path(sys.argv[2])
+    
     if not cpp_file.exists():
         print(f"{RED}File {cpp_file} not found!{RESET}")
+        sys.exit(1)
+    
+    if not test_file.exists():
+        print(f"{RED}Test file {test_file} not found!{RESET}")
+        sys.exit(1)
+    
+    # Parse test file
+    test_input, expected_output = parse_simple_test_file(test_file)
+    
+    if test_input is None or expected_output is None:
+        print(f"{RED}Could not parse test file! Expected format:{RESET}")
+        print("input")
+        print("test input here")
+        print("")
+        print("output") 
+        print("expected output here")
         sys.exit(1)
     
     # Compile
@@ -107,33 +123,16 @@ def main():
         sys.exit(1)
     
     try:
-        if len(sys.argv) == 3:
-            # Test file provided
-            test_file = Path(sys.argv[2])
-            if not test_file.exists():
-                print(f"{RED}Test file {test_file} not found!{RESET}")
-                sys.exit(1)
-            
-            tests = read_test_cases(test_file)
-            print(f"\n{BLUE}Running {len(tests)} test cases...{RESET}")
-            print("=" * 40)
-            
-            passed = 0
-            for i, (test_input, expected) in enumerate(tests, 1):
-                if run_test(executable, test_input, expected, i):
-                    passed += 1
-                print()
-            
-            print("=" * 40)
-            if passed == len(tests):
-                print(f"{GREEN}All tests passed! ({passed}/{len(tests)}){RESET}")
-            else:
-                print(f"{YELLOW}Passed {passed}/{len(tests)} tests{RESET}")
+        print(f"\n{BLUE}Running test...{RESET}")
+        print("=" * 50)
+        
+        success = run_test(executable, test_input, expected_output)
+        
+        print("=" * 50)
+        if success:
+            print(f"{GREEN}Test completed successfully!{RESET}")
         else:
-            # Interactive mode
-            print(f"\n{BLUE}Running in interactive mode...{RESET}")
-            print("=" * 40)
-            subprocess.run([f"./{executable}"])
+            print(f"{RED}Test failed!{RESET}")
     
     finally:
         # Clean up
