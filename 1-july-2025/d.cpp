@@ -19,8 +19,8 @@
 ╚══════════════════════════════════════════════════════════════════════════╝
 */
 
-#include "stdc++.h"
-// #include <bits/stdc++.h>
+// #include "stdc++.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 #define ll long long
@@ -40,14 +40,30 @@ const int INF = 1e9;
 const ll LINF = 1e18;
 
 void solve() {
-  // Your solution here
+    int n, k;
+    cin >> n >> k;
+    string s;
+    cin >> s;
+    
+    int count_ones = 0;
+    for(char c : s) {
+        if(c == '1') count_ones++;
+    }
+    
+    if(count_ones <= k) {
+        cout << "Alice" << "\n";
+    } else if(2 * k > n) {
+        cout << "Alice" << "\n";
+    } else {
+        cout << "Bob" << "\n";
+    }
 }
 
 int main() {
     fast
     
     int t = 1;
-    // cin >> t;
+    cin >> t;
     
     while(t--) {
         solve();

@@ -15,12 +15,12 @@
 ║                       ⣼⣿⠍⠉⣿⡭⠉⠙⢺⣇⣼⡏⠀⠀⠀⣄⢸⠀⠀⠀⠀⠀⠀                            ║
 ║                       ⣿⣿⣧⣀⣿.........⣀⣰⣏⣘⣆⣀⠀⠀                             ║
 ║                                                                          ║
-║               []                                                         ║                                           
+║               []            ║                                           
 ╚══════════════════════════════════════════════════════════════════════════╝
 */
 
-#include "stdc++.h"
-// #include <bits/stdc++.h>
+// #include "stdc++.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 #define ll long long
@@ -40,14 +40,33 @@ const int INF = 1e9;
 const ll LINF = 1e18;
 
 void solve() {
-  // Your solution here
+  int n;
+  cin >> n;
+
+  int x = 0;
+  int y = 0;
+
+  for(int i=0; i<n; i++){
+    int hitung = i % 4;
+    if(hitung == 0 || hitung == 3){
+      x++;
+    } else {
+      y++;
+    }
+  }
+
+  if(x%2 == 1 || y % 2 == 1){
+    cout << "Alice" << endl;
+  } else {
+    cout << "Bob" << endl;
+  }
 }
 
 int main() {
     fast
     
     int t = 1;
-    // cin >> t;
+    cin >> t;
     
     while(t--) {
         solve();

@@ -19,8 +19,8 @@
 ╚══════════════════════════════════════════════════════════════════════════╝
 */
 
-#include "stdc++.h"
-// #include <bits/stdc++.h>
+// #include "stdc++.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 #define ll long long
@@ -40,14 +40,61 @@ const int INF = 1e9;
 const ll LINF = 1e18;
 
 void solve() {
-  // Your solution here
+    int n, j, k;
+    cin >> n >> j >> k;
+
+
+    vector<int> a(n);
+    int player_j_strength = -1;
+
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+        if (i == j-1) {
+            player_j_strength = a[i];
+        }
+    }
+
+    int c_less = 0;
+    int c_equal = 0;
+    int c_greater = 0;
+
+    for (int i = 0; i < n; ++i) {
+        if (i == j-1) {
+            continue;
+        }
+
+        if (a[i] < player_j_strength) {
+            c_less++;
+        } else if (a[i] == player_j_strength) {
+            c_equal++;
+        } else {
+            c_greater++;
+        }
+    }
+
+    if (k == 1) {
+        if (c_greater > 0) {
+            cout << "NO\n";
+        } else {
+            cout << "YES\n";
+        }
+    } else {
+        int elim_from_greater = max(0, c_greater - (k - 1));
+        int remaining_eliminations_needed = (n - k) - elim_from_greater;
+
+        if (c_less + c_equal >= remaining_eliminations_needed) {
+            cout << "YES\n";
+        } else {
+            cout << "NO\n";
+        }
+    }
 }
 
 int main() {
     fast
     
     int t = 1;
-    // cin >> t;
+    cin >> t;
     
     while(t--) {
         solve();

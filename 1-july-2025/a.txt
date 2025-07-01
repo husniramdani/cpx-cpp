@@ -1,0 +1,14 @@
+input
+5
+2
+4
+5
+7
+100
+
+output
+Alice
+Bob
+Alice
+Alice
+Bob
